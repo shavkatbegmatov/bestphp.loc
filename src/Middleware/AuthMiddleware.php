@@ -37,4 +37,20 @@ class AuthMiddleware {
         }
         return true;
     }
+
+    public static function canCreate(): bool {
+        return self::hasPermission('create');
+    }
+
+    public static function canRead(): bool {
+        return self::hasPermission('read');
+    }
+
+    public static function canUpdate(): bool {
+        return self::hasPermission('update');
+    }
+
+    public static function canDelete(): bool {
+        return self::hasPermission('delete');
+    }
 }
