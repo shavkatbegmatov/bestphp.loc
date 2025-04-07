@@ -11,7 +11,7 @@ class Database {
     public static function getConnection(): PDO {
         if (!self::$instance) {
             try {
-                self::$instance = new PDO('mysql:host=127.0.0.1;dbname=goodphp;charset=utf8mb4', 'root', '');
+                self::$instance = new PDO('mysql:host=127.0.0.1;dbname=bestphp;charset=utf8mb4', 'root', '');
                 self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
                 die('DB connection error: ' . $e->getMessage());
