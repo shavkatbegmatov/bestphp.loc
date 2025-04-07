@@ -14,6 +14,7 @@ class Router {
     }
 
     public function dispatch(string $method, string $uri): void {
+        session_start();
         $uri = parse_url($uri, PHP_URL_PATH);
         $handler = $this->routes[$method][$uri] ?? null;
 

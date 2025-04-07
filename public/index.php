@@ -125,6 +125,33 @@ $router->post('/auth/login', function () {
     return json_encode(['error' => 'Invalid credentials']);
 });
 
+$router->post('/auth/register', function () {
+    $input = json_decode(file_get_contents('php://input'), true);
+    $name = $input['name'] ?? '';
+    $password = $input['password'] ?? '';
+
+    if (!$name || !$password) {
+        http_response_code(400);
+        return json_encode(['error' => 'Name and password are required']);
+    }
+
+    $pdo = App\Database::getConnection();
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM user WHERE name = :name");
+    $stmt->execute(['name' => $name]);
+    if ($stmt->fetchColumn() > 0) {
+        http_response_code(409);
+        return json_encode(['error' => 'User already exists']);
+    }
+
+    $stmt = $pdo->prepare("INSERT INTO user (name, password, created_at, updated_at) VALUES (:name, :password, NOW(), NOW())");
+    $stmt->execute([
+        'name' => $name,
+        'password' => md5($password)
+    ]);
+
+    return json_encode(['message' => 'Registration successful']);
+});
+
 $router->post('/auth/logout', function () {
     session_destroy();
     return json_encode(['message' => 'Logged out']);
