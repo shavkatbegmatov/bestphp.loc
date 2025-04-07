@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use App\Repository\RoleRepository;
 use App\Repository\PermissionRepository;
 use App\Repository\ModuleRepository;
+use App\Middleware\AuthMiddleware;
 
 $router = new Router();
 
@@ -15,19 +16,13 @@ $router->get('/', function () {
 });
 
 $router->get('/users', function () {
-    if (!isset($_SESSION['user_id'])) {
-        http_response_code(401);
-        return json_encode(['error' => 'Unauthorized']);
-    }
+    if (!AuthMiddleware::check()) return;
     $repo = new UserRepository();
     return json_encode($repo->all());
 });
 
 $router->get('/users/{id}', function ($id) {
-    if (!isset($_SESSION['user_id'])) {
-        http_response_code(401);
-        return json_encode(['error' => 'Unauthorized']);
-    }
+    if (!AuthMiddleware::check()) return;
     $repo = new UserRepository();
     $user = $repo->find((int) $id);
     if (!$user) {
@@ -38,19 +33,13 @@ $router->get('/users/{id}', function ($id) {
 });
 
 $router->get('/roles', function () {
-    if (!isset($_SESSION['user_id'])) {
-        http_response_code(401);
-        return json_encode(['error' => 'Unauthorized']);
-    }
+    if (!AuthMiddleware::check()) return;
     $repo = new RoleRepository();
     return json_encode($repo->all());
 });
 
 $router->get('/roles/{id}', function ($id) {
-    if (!isset($_SESSION['user_id'])) {
-        http_response_code(401);
-        return json_encode(['error' => 'Unauthorized']);
-    }
+    if (!AuthMiddleware::check()) return;
     $repo = new RoleRepository();
     $role = $repo->find((int) $id);
     if (!$role) {
@@ -61,19 +50,13 @@ $router->get('/roles/{id}', function ($id) {
 });
 
 $router->get('/permissions', function () {
-    if (!isset($_SESSION['user_id'])) {
-        http_response_code(401);
-        return json_encode(['error' => 'Unauthorized']);
-    }
+    if (!AuthMiddleware::check()) return;
     $repo = new PermissionRepository();
     return json_encode($repo->all());
 });
 
 $router->get('/permissions/{id}', function ($id) {
-    if (!isset($_SESSION['user_id'])) {
-        http_response_code(401);
-        return json_encode(['error' => 'Unauthorized']);
-    }
+    if (!AuthMiddleware::check()) return;
     $repo = new PermissionRepository();
     $perm = $repo->find((int) $id);
     if (!$perm) {
@@ -84,19 +67,13 @@ $router->get('/permissions/{id}', function ($id) {
 });
 
 $router->get('/modules', function () {
-    if (!isset($_SESSION['user_id'])) {
-        http_response_code(401);
-        return json_encode(['error' => 'Unauthorized']);
-    }
+    if (!AuthMiddleware::check()) return;
     $repo = new ModuleRepository();
     return json_encode($repo->all());
 });
 
 $router->get('/modules/{id}', function ($id) {
-    if (!isset($_SESSION['user_id'])) {
-        http_response_code(401);
-        return json_encode(['error' => 'Unauthorized']);
-    }
+    if (!AuthMiddleware::check()) return;
     $repo = new ModuleRepository();
     $mod = $repo->find((int) $id);
     if (!$mod) {
