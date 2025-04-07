@@ -19,6 +19,16 @@ $router->get('/users', function () {
     return json_encode($repo->all());
 });
 
+$router->get('/users/{id}', function ($id) {
+    $repo = new UserRepository();
+    $user = $repo->find((int) $id);
+    if (!$user) {
+        http_response_code(404);
+        return json_encode(['error' => 'User not found']);
+    }
+    return json_encode($user);
+});
+
 $router->get('/roles', function () {
     $repo = new RoleRepository();
     return json_encode($repo->all());
@@ -35,3 +45,5 @@ $router->get('/modules', function () {
 });
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+// http_response_code(404);
+// echo "404 Not Found";
