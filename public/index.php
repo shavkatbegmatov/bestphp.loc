@@ -1,6 +1,6 @@
 <?php
 
-// require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Router;
 use App\Repository\UserRepository;
@@ -72,6 +72,24 @@ $router->get('/modules/{id}', function ($id) {
         return json_encode(['error' => 'Module not found']);
     }
     return json_encode($mod);
+});
+
+$router->post('/auth/login', function () {
+    $input = json_decode(file_get_contents('php://input'), true);
+    $name = $input['name'] ?? '';
+    $password = $input['password'] ?? '';
+
+    $repo = new UserRepository();
+    $users = $repo->all();
+
+    foreach ($users as $user) {
+        if ($user->name === $name && $user->password === md5($password)) {
+            return json_encode(['message' => 'Login successful', 'user_id' => $user->id]);
+        }
+    }
+
+    http_response_code(401);
+    return json_encode(['error' => 'Invalid credentials']);
 });
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
