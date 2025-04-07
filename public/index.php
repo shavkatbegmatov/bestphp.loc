@@ -2,28 +2,36 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\Router;
 use App\Repository\UserRepository;
 use App\Repository\RoleRepository;
 use App\Repository\PermissionRepository;
 use App\Repository\ModuleRepository;
 
-$userRepo = new UserRepository();
-$roleRepo = new RoleRepository();
-$permRepo = new PermissionRepository();
-$moduleRepo = new ModuleRepository();
+$router = new Router();
 
-print_r($userRepo->all());
-print_r($roleRepo->all());
-print_r($permRepo->all());
-print_r($moduleRepo->all());
+$router->get('/', function () {
+    return 'Добро пожаловать в JCore!';
+});
 
-// // require_once __DIR__ . '/../vendor/autoload.php';
+$router->get('/users', function () {
+    $repo = new UserRepository();
+    return json_encode($repo->all());
+});
 
-// use App\Repository\UserRepository;
+$router->get('/roles', function () {
+    $repo = new RoleRepository();
+    return json_encode($repo->all());
+});
 
-// $userRepo = new UserRepository();
-// $user = $userRepo->find(1);
+$router->get('/permissions', function () {
+    $repo = new PermissionRepository();
+    return json_encode($repo->all());
+});
 
-// echo "<pre>";
-// print_r($user);
-// echo "</pre>";
+$router->get('/modules', function () {
+    $repo = new ModuleRepository();
+    return json_encode($repo->all());
+});
+
+$router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
